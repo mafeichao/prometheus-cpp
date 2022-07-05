@@ -28,7 +28,7 @@ class TextSerializerTest : public testing::Test {
 
     std::vector<MetricFamily> families{metricFamily};
 
-    return textSerializer.Serialize(families);
+    return textSerializer.Serialize(families.data(), families.size());
   }
 
   const std::string name = "my_metric";

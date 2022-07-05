@@ -1,3 +1,4 @@
+#include <iostream>
 
 #include "prometheus/gateway.h"
 
@@ -64,11 +65,15 @@ std::string Gateway::getUri(const CollectableEntry& collectable) const {
   return uri.str();
 }
 
-int Gateway::Push() { return push(detail::HttpMethod::Post); }
+int Gateway::Push() {
+  std::cout << "======push0" << std::endl;
+  return push(detail::HttpMethod::Post);
+}
 
 int Gateway::PushAdd() { return push(detail::HttpMethod::Put); }
 
 int Gateway::push(detail::HttpMethod method) {
+  std::cout << "======push1" << std::endl;
   const auto serializer = TextSerializer{};
 
   std::lock_guard<std::mutex> lock{mutex_};
@@ -79,7 +84,7 @@ int Gateway::push(detail::HttpMethod method) {
     }
 
     auto metrics = collectable->Collect();
-    auto body = serializer.Serialize(metrics);
+    auto body = serializer.Serialize(metrics.data(), metrics.size());
     auto uri = getUri(wcollectable);
     auto status_code = curlWrapper_->performHttpRequest(method, uri, body);
 
@@ -111,7 +116,7 @@ std::future<int> Gateway::async_push(detail::HttpMethod method) {
     }
 
     auto metrics = collectable->Collect();
-    auto body = std::make_shared<std::string>(serializer.Serialize(metrics));
+    auto body = std::make_shared<std::string>(serializer.Serialize(metrics.data(), metrics.size()));
     auto uri = getUri(wcollectable);
 
     futures.push_back(std::async(std::launch::async, [method, uri, body, this] {

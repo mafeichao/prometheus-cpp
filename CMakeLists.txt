@@ -184,6 +184,8 @@ endif()
 
 # summary
 
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++14 -D_GLIBCXX_USE_CXX11_ABI=1")
+
 include(FeatureSummary)
 add_feature_info("Pull" "${ENABLE_PULL}" "support for pulling metrics")
 add_feature_info("Push" "${ENABLE_PUSH}" "support for pushing metrics to a push-gateway")

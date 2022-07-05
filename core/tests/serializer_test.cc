@@ -45,7 +45,7 @@ TEST_F(SerializerTest, shouldSerializeLocaleIndependent) {
     GTEST_SKIP();
   }
 
-  const auto serialized = textSerializer.Serialize(collected);
+  const auto serialized = textSerializer.Serialize(collected.data(), collected.size());
   EXPECT_THAT(serialized, testing::HasSubstr(" 1\n"));
 }
 #endif
@@ -61,7 +61,7 @@ TEST_F(SerializerTest, shouldRestoreStreamState) {
   auto saved_locale = os.getloc();
 
   // serialize
-  textSerializer.Serialize(os, collected);
+  textSerializer.Serialize(os, collected.data(), collected.size());
 
   // check for expected flags
   EXPECT_EQ(os.flags(), saved_flags);

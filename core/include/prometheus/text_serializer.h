@@ -5,15 +5,14 @@
 
 #include "prometheus/detail/core_export.h"
 #include "prometheus/metric_family.h"
-#include "prometheus/serializer.h"
 
 namespace prometheus {
 
-class PROMETHEUS_CPP_CORE_EXPORT TextSerializer : public Serializer {
+class PROMETHEUS_CPP_CORE_EXPORT TextSerializer {
  public:
-  using Serializer::Serialize;
+  std::string Serialize(const MetricFamily*, int size) const;
   void Serialize(std::ostream& out,
-                 const std::vector<MetricFamily>& metrics) const override;
+                 const MetricFamily* metrics, int size) const;
 };
 
 }  // namespace prometheus

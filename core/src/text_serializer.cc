@@ -5,6 +5,7 @@
 #include <locale>
 #include <ostream>
 #include <string>
+#include <sstream>  // IWYU pragma: keep
 
 #include "prometheus/client_metric.h"
 #include "prometheus/metric_family.h"
@@ -201,15 +202,22 @@ void SerializeFamily(std::ostream& out, const MetricFamily& family) {
 }
 }  // namespace
 
+std::string TextSerializer::Serialize(const MetricFamily* metrics, int size) const {
+  std::ostringstream ss;
+  Serialize(ss, metrics, size);
+  return ss.str();
+}
+
 void TextSerializer::Serialize(std::ostream& out,
-                               const std::vector<MetricFamily>& metrics) const {
+                               const MetricFamily* metrics, int size) const {
   auto saved_locale = out.getloc();
   auto saved_precision = out.precision();
 
   out.imbue(std::locale::classic());
   out.precision(std::numeric_limits<double>::max_digits10 - 1);
 
-  for (auto& family : metrics) {
+  for (int i = 0; i < size;++i) {
+    auto& family = metrics[i];
     SerializeFamily(out, family);
   }
 
