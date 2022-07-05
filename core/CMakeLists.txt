@@ -12,7 +12,6 @@ add_library(core
   src/info.cc
   src/registry.cc
   src/summary.cc
-  src/text_serializer.cc
 )
 
 add_library(${PROJECT_NAME}::core ALIAS core)
