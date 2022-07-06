@@ -1,5 +1,3 @@
-#include <iostream>
-
 #include "prometheus/gateway.h"
 
 #include <algorithm>
@@ -66,14 +64,12 @@ std::string Gateway::getUri(const CollectableEntry& collectable) const {
 }
 
 int Gateway::Push() {
-  std::cout << "======push0" << std::endl;
   return push(detail::HttpMethod::Post);
 }
 
 int Gateway::PushAdd() { return push(detail::HttpMethod::Put); }
 
 int Gateway::push(detail::HttpMethod method) {
-  std::cout << "======push1" << std::endl;
   const auto serializer = TextSerializer{};
 
   std::lock_guard<std::mutex> lock{mutex_};
